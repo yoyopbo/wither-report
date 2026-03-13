@@ -1,359 +1,569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Wither Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Wither Report — Chalkboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Pacifico', cursive;
-    min-height: 100vh;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    overflow: hidden;
-    position: relative;
-  }
+    body {
+      font-family: 'Patrick Hand', 'Caveat', cursive;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      /* Dark wood frame / classroom wall */
+      background: #1a1209;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 40px,
+          rgba(255,255,255,0.012) 40px,
+          rgba(255,255,255,0.012) 41px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 40px,
+          rgba(255,255,255,0.012) 40px,
+          rgba(255,255,255,0.012) 41px
+        );
+      position: relative;
+    }
 
-  /* floating confetti dots */
-  .confetti-dot {
-    position: fixed;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    animation: float-up linear infinite;
-    opacity: 0.7;
-    pointer-events: none;
-  }
+    /* Wooden tray strip at bottom of board */
+    .chalk-tray {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: linear-gradient(180deg, #5c3d1a 0%, #3d2710 100%);
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
 
-  @keyframes float-up {
-    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    10%  { opacity: 0.7; }
-    90%  { opacity: 0.7; }
-    100% { transform: translateY(-80px) rotate(720deg); opacity: 0; }
-  }
+    .chalk-stub {
+      width: 36px;
+      height: 10px;
+      border-radius: 4px;
+      opacity: 0.7;
+    }
 
-  .card {
-    background: white;
-    width: 100%;
-    max-width: 460px;
-    padding: 28px 22px;
-    border-radius: 24px;
-    border: 5px solid transparent;
-    background-clip: padding-box;
-    position: relative;
-    z-index: 1;
-    box-shadow:
-      0 0 0 5px white,
-      0 0 0 9px #ff80c0,
-      0 8px 40px rgba(0,0,0,0.1);
-  }
+    /* Board frame */
+    .board-frame {
+      position: relative;
+      max-width: 560px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(145deg, #4a2c0a, #2e1a08);
+      border-radius: 6px;
+      box-shadow:
+        0 0 0 3px #6b3f12,
+        0 0 0 6px #3d2208,
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 2px 4px rgba(255,200,100,0.1);
+    }
 
-  /* rainbow outline via pseudo */
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border-radius: 30px;
-    background: linear-gradient(135deg,
-      #ff6b6b, #ffa500, #ffff00, #7fff00,
-      #00cfff, #a855f7, #ff6b6b);
-    z-index: -1;
-  }
+    /* Board surface */
+    .board {
+      background: #2d5a27;
+      border-radius: 3px;
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
 
-  .title-wrap {
-    text-align: center;
-    margin-bottom: 6px;
-  }
+      /* Chalk texture via layered radial gradients */
+      background-image:
+        radial-gradient(ellipse 180% 180% at 30% 30%, rgba(255,255,255,0.018) 0%, transparent 60%),
+        radial-gradient(ellipse 120% 100% at 75% 70%, rgba(255,255,255,0.012) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.008) 0%, transparent 40%),
+        repeating-radial-gradient(
+          circle at 50% 50%,
+          transparent,
+          transparent 3px,
+          rgba(255,255,255,0.004) 3px,
+          rgba(255,255,255,0.004) 4px
+        );
+    }
 
-  .rainbow-title {
-    font-size: 1.9rem;
-    background: linear-gradient(90deg,
-      #ff0000, #ff8800, #ffdd00,
-      #00cc00, #0088ff, #8800ff, #ff0088);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: inline-block;
-    line-height: 1.3;
-    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1));
-  }
+    /* Chalk dust streaks */
+    .board::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          172deg,
+          transparent 0px,
+          transparent 8px,
+          rgba(255,255,255,0.008) 8px,
+          rgba(255,255,255,0.008) 9px
+        );
+      pointer-events: none;
+    }
 
-  .sparkle-row {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    letter-spacing: 4px;
-  }
+    /* Chalk border around board */
+    .board::after {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 2.5px solid rgba(255,255,255,0.18);
+      border-radius: 2px;
+      pointer-events: none;
+    }
 
-  .feeling-label {
-    text-align: center;
-    font-size: 1.1rem;
-    margin-bottom: 14px;
-    background: linear-gradient(90deg, #ff6b6b, #ffa500, #ffdd00, #00cc00, #0088ff, #cc00ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+    .board > * { position: relative; z-index: 2; }
 
-  .emoji-stage {
-    text-align: center;
-    margin-bottom: 14px;
-    position: relative;
-  }
+    /* Header */
+    .board-header {
+      text-align: center;
+      margin-bottom: 1.8rem;
+    }
 
-  .emoji-surrounds {
-    font-size: 1.8rem;
-    letter-spacing: 6px;
-    margin-bottom: 4px;
-  }
+    .board-title {
+      font-family: 'Caveat', cursive;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #fff9c4;
+      text-shadow:
+        1px 1px 0 rgba(255,255,255,0.1),
+        2px 2px 8px rgba(0,0,0,0.3);
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+      /* Slightly uneven look */
+      transform: rotate(-0.8deg);
+      display: inline-block;
+    }
 
-  .main-emoji {
-    font-size: 7rem;
-    display: inline-block;
-    animation: rainbow-spin 3s ease-in-out infinite;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
-  }
+    .board-subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 0.4rem;
+      letter-spacing: 0.06em;
+    }
 
-  @keyframes rainbow-spin {
-    0%   { transform: rotate(-5deg) scale(1); }
-    25%  { transform: rotate(5deg) scale(1.08); }
-    50%  { transform: rotate(-3deg) scale(1.12); }
-    75%  { transform: rotate(6deg) scale(1.05); }
-    100% { transform: rotate(-5deg) scale(1); }
-  }
+    /* Chalk underline */
+    .chalk-underline {
+      width: 70%;
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,0.45) 15%,
+        rgba(255,255,255,0.55) 50%,
+        rgba(255,255,255,0.4) 85%,
+        transparent 100%
+      );
+      margin: 0.6rem auto 0;
+      border-radius: 2px;
+      position: relative;
+    }
 
-  .condition-wrap {
-    text-align: center;
-    margin-bottom: 6px;
-  }
+    /* Small chalk stars on header */
+    .chalk-stars {
+      font-size: 0.85rem;
+      color: rgba(255, 240, 100, 0.6);
+      letter-spacing: 1rem;
+      display: block;
+      text-align: center;
+      margin-bottom: 1.6rem;
+    }
 
-  .condition-text {
-    font-size: 2rem;
-    background: linear-gradient(90deg,
-      #ff3366, #ff8800, #ffcc00, #33cc33, #0099ff, #aa00ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: inline-block;
-  }
+    /* Date corner stamp */
+    .date-corner {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.38);
+      transform: rotate(1.5deg);
+      text-align: right;
+      line-height: 1.5;
+      z-index: 3;
+    }
 
-  .level-label {
-    text-align: center;
-    font-size: 1rem;
-    color: #ff88bb;
-    margin-bottom: 12px;
-  }
+    /* Main content area */
+    .content-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
 
-  /* Rainbow gradient bar */
-  .scale-section {
-    margin-bottom: 18px;
-  }
+    /* Emoji circle */
+    .emoji-circle {
+      flex-shrink: 0;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+    }
 
-  .rainbow-bar-track {
-    height: 24px;
-    border-radius: 12px;
-    background: linear-gradient(90deg,
-      #6060a0, #5a80a0, #6090b0, #8899b0, #99aabb,
-      #70b0d0, #80c080, #f0c040, #f0a030, #ff80c0);
-    position: relative;
-    overflow: hidden;
-    border: 3px solid transparent;
-    box-shadow: 0 0 0 3px white, 0 0 0 5px #ffaacc;
-  }
+    /* Chalk circle effect — hand-drawn look with irregular dashing */
+    .emoji-circle::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.25);
+    }
 
-  .rainbow-bar-mask {
-    position: absolute;
-    top: 0; right: 0; bottom: 0;
-    background: rgba(255,255,255,0.88);
-    transition: width 0.6s ease;
-    border-radius: 0 10px 10px 0;
-  }
+    .emoji-circle::after {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1px dotted rgba(255,255,255,0.12);
+    }
 
-  .bar-marker {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    background: white;
-    border: 3px solid #ff44aa;
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255, 60, 160, 0.6);
-  }
+    /* Right side text */
+    .text-side {
+      flex: 1;
+      text-align: left;
+    }
 
-  .bar-numbers {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 2px 0;
-    font-size: 0.55rem;
-    color: #ccc;
-  }
+    .feeling-question {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      color: #ffb3cc;
+      margin-bottom: 0.3rem;
+      transform: rotate(-0.5deg);
+      display: inline-block;
+    }
 
-  .divider-rainbow {
-    border: none;
-    height: 4px;
-    background: linear-gradient(90deg,
-      #ff3366, #ff8800, #ffcc00, #33cc33, #0099ff, #aa00ff, #ff3366);
-    border-radius: 2px;
-    margin: 16px 0;
-  }
+    .condition-name {
+      font-family: 'Caveat', cursive;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow:
+        1px 1px 3px rgba(0,0,0,0.3),
+        0 0 20px rgba(255,255,255,0.15);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+      transform: rotate(-1deg);
+    }
 
-  .note-card {
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    min-height: 56px;
-    position: relative;
-    overflow: hidden;
-  }
+    .chalk-arrow {
+      color: #fff9c4;
+      font-size: 1.1rem;
+      display: block;
+    }
 
-  .note-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg,
-      #fff0fa, #f0faff, #f0fff0, #fffaf0);
-    z-index: 0;
-    border-radius: 16px;
-  }
+    /* Scale section */
+    .scale-section {
+      margin-bottom: 1.8rem;
+    }
 
-  .note-card > * { position: relative; z-index: 1; }
+    .scale-label {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.06em;
+    }
 
-  .note-label {
-    font-size: 0.8rem;
-    background: linear-gradient(90deg, #ff66aa, #aa44ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 4px;
-  }
+    /* Progress bar chalk style */
+    .chalk-bar-wrap {
+      position: relative;
+      height: 18px;
+      background: rgba(0,0,0,0.25);
+      border-radius: 3px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      margin-bottom: 0.7rem;
+      overflow: hidden;
+    }
 
-  .note-text {
-    font-size: 1rem;
-    color: #886699;
-    line-height: 1.5;
-  }
+    .chalk-bar-fill {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      bottom: 2px;
+      border-radius: 2px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.5) 0%,
+        rgba(255,255,255,0.65) 60%,
+        rgba(255,255,255,0.4) 100%
+      );
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Chalk texture on the bar */
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 6px,
+          rgba(0,0,0,0.06) 6px,
+          rgba(0,0,0,0.06) 7px
+        );
+    }
 
-  .updated-section {
-    text-align: center;
-  }
+    /* Tally marks */
+    .tally-row {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-wrap: wrap;
+    }
 
-  .updated-badge {
-    display: inline-block;
-    background: linear-gradient(135deg, #ff6b6b, #ffa500, #ffdd00, #00cc00, #0088ff, #aa00ff);
-    border-radius: 50px;
-    padding: 8px 20px;
-    font-size: 0.85rem;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
+    .tally-group {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-right: 6px;
+    }
 
-  .fallback {
-    text-align: center;
-    font-size: 1.3rem;
-    color: #ff88bb;
-    padding: 30px;
-  }
-</style>
+    .tally-mark {
+      font-size: 1.2rem;
+      font-family: 'Caveat', cursive;
+      line-height: 1;
+      transition: color 0.4s ease;
+    }
+
+    .tally-mark.filled    { color: rgba(255,255,255,0.8); }
+    .tally-mark.empty     { color: rgba(255,255,255,0.18); }
+    /* 5th mark is diagonal slash */
+    .tally-mark.slash     { transform: rotate(-20deg); display: inline-block; }
+
+    /* Divider */
+    .chalk-divider {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 4px;
+      text-align: center;
+      margin: 1.2rem 0;
+    }
+
+    /* Note area */
+    .note-section {
+      background: rgba(0,0,0,0.15);
+      border-left: 3px solid rgba(255, 200, 100, 0.4);
+      padding: 0.8rem 1rem;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 1.5rem;
+      min-height: 2.5rem;
+    }
+
+    .note-label {
+      font-size: 0.72rem;
+      color: rgba(255, 200, 100, 0.6);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.25rem;
+    }
+
+    .note-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    /* Footer row */
+    .board-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .footer-doodles {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 4px;
+    }
+
+    .updated-text {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .content-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .text-side { text-align: center; }
+      .board-footer { flex-direction: column; align-items: center; gap: 8px; }
+      .updated-text { text-align: center; }
+    }
+  </style>
 </head>
 <body>
-<!-- confetti dots injected by JS -->
 
-<div class="card">
-  <div class="title-wrap">
-    <div class="rainbow-title">The Wither Report!</div>
+  <!-- Chalk tray -->
+  <div class="chalk-tray">
+    <div class="chalk-stub" style="background:#fff9d6; width:44px;"></div>
+    <div class="chalk-stub" style="background:#ffb3cc; width:32px;"></div>
+    <div class="chalk-stub" style="background:#b3d9ff; width:50px;"></div>
+    <div class="chalk-stub" style="background:#fff9d6; width:28px;"></div>
+    <div class="chalk-stub" style="background:#c8f0c0; width:38px;"></div>
   </div>
-  <div class="sparkle-row">✨ 🌈 ⭐ 🌈 ✨</div>
-  <div id="content">
-    <div class="fallback">✨ loading... ✨</div>
-  </div>
-</div>
 
-<script>
-const STATES = [
-  { label: 'Stormy',        emoji: '⛈️',  color: '#6060a0' },
-  { label: 'Heavy Rain',    emoji: '🌧️', color: '#5a80a0' },
-  { label: 'Rainy',         emoji: '🌦️', color: '#6090b0' },
-  { label: 'Overcast',      emoji: '🌥️', color: '#8899b0' },
-  { label: 'Cloudy',        emoji: '☁️',  color: '#99aabb' },
-  { label: 'Partly Cloudy', emoji: '🌤️', color: '#70b0d0' },
-  { label: 'Clearing Up',   emoji: '🌈',  color: '#80c080' },
-  { label: 'Sunny',         emoji: '☀️',  color: '#f0c040' },
-  { label: 'Beautiful',     emoji: '🌟',  color: '#f0a030' },
-  { label: 'Perfect',       emoji: '✨',  color: '#ff80c0' },
-];
+  <div class="board-frame">
+    <div class="board">
 
-// spawn confetti
-const CONFETTI_COLORS = [
-  '#ff6b6b','#ffa500','#ffdd00','#00cc44',
-  '#00aaff','#aa44ff','#ff44bb','#00ddcc'
-];
-for (let i = 0; i < 22; i++) {
-  const d = document.createElement('div');
-  d.className = 'confetti-dot';
-  d.style.cssText = `
-    left: ${Math.random() * 100}vw;
-    width: ${8 + Math.random() * 10}px;
-    height: ${8 + Math.random() * 10}px;
-    background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
-    animation-duration: ${4 + Math.random() * 6}s;
-    animation-delay: ${Math.random() * 6}s;
-  `;
-  document.body.appendChild(d);
-}
-
-fetch('mood.json?v=' + Date.now())
-  .then(r => r.json())
-  .then(data => {
-    const level = Math.max(1, Math.min(10, data.level || 6));
-    const s = STATES[level - 1];
-
-    // mask percentage: level 10 = 0% hidden, level 1 = 90% hidden
-    const maskPct = ((10 - level) / 10 * 100).toFixed(1);
-    const markerLeft = (level / 10 * 100).toFixed(1);
-
-    let numsHTML = '';
-    for (let i = 1; i <= 10; i++) numsHTML += `<span>${i}</span>`;
-
-    const noteHTML = data.note
-      ? `<div class="note-label">a lil note ✏️</div><div class="note-text">${data.note}</div>`
-      : `<div class="note-text" style="color:#ddc4ee;">no note today! 🌸</div>`;
-
-    document.getElementById('content').innerHTML = `
-      <div class="feeling-label">azmyth is feeling...</div>
-      <div class="emoji-stage">
-        <div class="emoji-surrounds">✨ 🌟 ✨ 🌈 ✨</div>
-        <div><span class="main-emoji">${s.emoji}</span></div>
-        <div class="emoji-surrounds">⭐ 💫 ✨ 💖 ✨</div>
+      <!-- Date in corner -->
+      <div class="date-corner" id="dateCorner">
+        <div style="color:rgba(255,200,100,0.5)">☆ daily report</div>
+        <div id="dateText">loading...</div>
       </div>
-      <div class="condition-wrap">
-        <span class="condition-text">${s.label}</span>
+
+      <!-- Header -->
+      <div class="board-header">
+        <div class="board-title">How's Azmyth doing?</div>
+        <div class="chalk-underline"></div>
+        <div class="board-subtitle">~ the wither report ~</div>
       </div>
-      <div class="level-label">level ${level} out of 10 🌈</div>
-      <div class="scale-section">
-        <div class="rainbow-bar-track">
-          <div class="rainbow-bar-mask" style="width: ${maskPct}%"></div>
-          <div class="bar-marker" style="left: ${markerLeft}%"></div>
+
+      <div class="chalk-stars">★ ✦ ★</div>
+
+      <!-- Main content -->
+      <div class="content-row">
+        <div class="emoji-circle" id="mainEmoji">⛈️</div>
+        <div class="text-side">
+          <div class="feeling-question">feeling like...</div>
+          <div class="condition-name" id="conditionName">Loading</div>
+          <span class="chalk-arrow">← today's mood ✓</span>
         </div>
-        <div class="bar-numbers">${numsHTML}</div>
       </div>
-      <div class="divider-rainbow"></div>
-      <div class="note-card">${noteHTML}</div>
-      <div class="updated-section">
-        <div class="updated-badge">✨ last updated: ${data.updated || '?'} ✨</div>
+
+      <!-- Scale -->
+      <div class="scale-section">
+        <div class="scale-label">mood level: <span id="levelNum">?</span> / 10</div>
+        <div class="chalk-bar-wrap">
+          <div class="chalk-bar-fill" id="barFill" style="width:0%"></div>
+        </div>
+        <div class="tally-row" id="tallyRow"></div>
       </div>
-    `;
-  })
-  .catch(() => {
-    document.getElementById('content').innerHTML =
-      '<div class="fallback">🌈 oops! couldn\'t load 🌈</div>';
-  });
-</script>
+
+      <div class="chalk-divider">- - - - - - - - - - - - - - -</div>
+
+      <!-- Note -->
+      <div class="note-section" id="noteSection" style="display:none">
+        <div class="note-label">✎ note:</div>
+        <div class="note-text" id="noteText"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="board-footer">
+        <div class="footer-doodles">⭐ ✦ ☆ ✩ ⭐</div>
+        <div class="updated-text" id="updatedText">updated: loading...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const STATES = [
+      { label: 'Stormy',        emoji: '⛈️'  },
+      { label: 'Heavy Rain',    emoji: '🌧️'  },
+      { label: 'Rainy',         emoji: '🌦️'  },
+      { label: 'Overcast',      emoji: '🌥️'  },
+      { label: 'Cloudy',        emoji: '☁️'  },
+      { label: 'Partly Cloudy', emoji: '🌤️'  },
+      { label: 'Clearing Up',   emoji: '🌈'   },
+      { label: 'Sunny',         emoji: '☀️'  },
+      { label: 'Beautiful',     emoji: '🌟'   },
+      { label: 'Perfect',       emoji: '✨'   },
+    ];
+
+    // Build tally marks (groups of 5)
+    const tallyRow = document.getElementById('tallyRow');
+    const tallies  = [];
+    for (let g = 0; g < 2; g++) {
+      const group = document.createElement('div');
+      group.className = 'tally-group';
+      for (let t = 0; t < 5; t++) {
+        const mark = document.createElement('span');
+        const idx  = g * 5 + t;
+        // 5th mark in each group is the slash
+        mark.className = 'tally-mark empty' + (t === 4 ? ' slash' : '');
+        mark.textContent = t === 4 ? '/' : '|';
+        mark.id = 'tally-' + idx;
+        group.appendChild(mark);
+        tallies.push(mark);
+      }
+      tallyRow.appendChild(group);
+    }
+
+    function formatDate(str) {
+      if (!str) return '';
+      const d = new Date(str);
+      if (isNaN(d)) return str;
+      return d.toLocaleString('en-US', {
+        weekday: 'short', month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+
+    function shortDate(str) {
+      if (!str) return '';
+      const d = new Date(str);
+      if (isNaN(d)) return str;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    fetch('mood.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const level = Math.max(1, Math.min(10, data.level || 6));
+        const s = STATES[level - 1];
+
+        document.getElementById('mainEmoji').textContent     = s.emoji;
+        document.getElementById('conditionName').textContent = s.label;
+        document.getElementById('levelNum').textContent      = level;
+
+        // Progress bar
+        document.getElementById('barFill').style.width = (level * 10) + '%';
+
+        // Tally marks
+        for (let i = 0; i < 10; i++) {
+          const m = document.getElementById('tally-' + i);
+          if (i < level) {
+            m.className = m.className.replace('empty', 'filled');
+          }
+        }
+
+        // Note
+        if (data.note) {
+          document.getElementById('noteSection').style.display = '';
+          document.getElementById('noteText').textContent = data.note;
+        }
+
+        // Date corner
+        if (data.updated) {
+          document.getElementById('dateText').textContent = shortDate(data.updated);
+        }
+
+        // Updated footer
+        const upd = document.getElementById('updatedText');
+        upd.textContent = data.updated
+          ? 'updated: ' + formatDate(data.updated)
+          : '';
+      })
+      .catch(() => {
+        document.getElementById('conditionName').textContent = '???';
+        document.getElementById('updatedText').textContent   = 'could not load data';
+      });
+  </script>
 </body>
 </html>

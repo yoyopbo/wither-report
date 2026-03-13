@@ -1,340 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Wither Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>~~*AZMYTH'S WITHER REPORT*~~</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Bangers', cursive;
-    min-height: 100vh;
-    background-color: #ffe44d;
-    background-image: radial-gradient(circle, #333 1px, transparent 1px);
-    background-size: 18px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .card {
-    background: #ffe44d;
-    width: 100%;
-    max-width: 460px;
-    border: 4px solid #111;
-    box-shadow: 8px 8px 0 #111;
-    position: relative;
-    overflow: visible;
-  }
-
-  .card-header {
-    background: #e63030;
-    border-bottom: 4px solid #111;
-    padding: 14px 20px;
-    text-align: center;
-    position: relative;
-  }
-
-  .card-header h1 {
-    font-size: 2.6rem;
-    color: #ffe44d;
-    letter-spacing: 4px;
-    text-shadow:
-      3px 3px 0 #111,
-      -1px -1px 0 #111,
-      1px -1px 0 #111,
-      -1px 1px 0 #111;
-    line-height: 1;
-  }
-
-  .speed-lines {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 30px,
-      rgba(255,255,255,0.06) 30px,
-      rgba(255,255,255,0.06) 32px
-    );
-    pointer-events: none;
-  }
-
-  .card-body {
-    padding: 20px;
-  }
-
-  /* Speech bubble */
-  .speech-bubble {
-    background: white;
-    border: 4px solid #111;
-    border-radius: 12px;
-    padding: 10px 16px;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    color: #111;
-    position: relative;
-    margin-bottom: 24px;
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-  }
-
-  .speech-bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 10px solid transparent;
-    border-top: 10px solid #111;
-  }
-
-  .speech-bubble::before {
-    content: '';
-    position: absolute;
-    bottom: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-top: 8px solid white;
-    z-index: 1;
-  }
-
-  .emoji-panel {
-    background: #1a6fcc;
-    border: 4px solid #111;
-    margin: 20px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    box-shadow: 4px 4px 0 #111;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .emoji-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.04),
-      rgba(255,255,255,0.04) 5px,
-      transparent 5px,
-      transparent 20px
-    );
-  }
-
-  .main-emoji {
-    font-size: 7rem;
-    filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.4));
-    position: relative;
-    z-index: 1;
-  }
-
-  .pow-panel {
-    text-align: center;
-    padding: 12px 10px 8px;
-  }
-
-  .condition-text {
-    font-size: 3.4rem;
-    letter-spacing: 3px;
-    color: #111;
-    text-shadow:
-      4px 4px 0 rgba(0,0,0,0.2);
-    display: inline-block;
-    padding: 4px 16px;
-    border: 4px solid #111;
-    box-shadow: 4px 4px 0 #111;
-    background: white;
-    transform: rotate(-1deg);
-    display: inline-block;
-  }
-
-  .level-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 1.4rem;
-    color: #111;
-    margin: 14px 0 6px;
-    letter-spacing: 1px;
-  }
-
-  .scale-section {
-    margin-bottom: 16px;
-  }
-
-  .scale-bars {
-    display: flex;
-    gap: 4px;
-    align-items: flex-end;
-    height: 40px;
-    padding: 0 4px;
-    margin-top: 8px;
-  }
-
-  .bar {
-    flex: 1;
-    border: 3px solid #111;
-    background: #ddd;
-    box-shadow: 2px 2px 0 #111;
-    height: 30px;
-  }
-
-  .bar.filled { background: var(--bc, #e63030); }
-  .bar.current { border-color: #111; box-shadow: 3px 3px 0 #111; height: 40px; }
-
-  .divider-comic {
-    border: none;
-    border-top: 4px solid #111;
-    margin: 14px 0;
-    position: relative;
-  }
-
-  .divider-comic::after {
-    content: '✦ ✦ ✦';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #ffe44d;
-    padding: 0 8px;
-    font-size: 1rem;
-    color: #111;
-  }
-
-  .note-box {
-    background: white;
-    border: 4px solid #111;
-    padding: 10px 14px;
-    margin-bottom: 14px;
-    box-shadow: 4px 4px 0 #111;
-    min-height: 52px;
-  }
-
-  .note-label {
-    font-size: 1.1rem;
-    color: #e63030;
-    letter-spacing: 2px;
-    margin-bottom: 4px;
-  }
-
-  .note-text {
-    font-size: 1.3rem;
-    color: #333;
-  }
-
-  .updated-box {
-    background: #111;
-    color: #ffe44d;
-    padding: 8px 16px;
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-    text-align: right;
-  }
-
-  .bang {
-    display: inline-block;
-    background: #e63030;
-    color: white;
-    font-size: 1rem;
-    padding: 1px 6px;
-    border: 2px solid #111;
-    margin-right: 4px;
-    transform: rotate(-3deg);
-    display: inline-block;
-    box-shadow: 2px 2px 0 #111;
-  }
-
-  .fallback {
-    text-align: center;
-    font-size: 1.8rem;
-    color: #111;
-    padding: 30px;
-    letter-spacing: 2px;
-  }
-</style>
-</head>
-<body>
-<div class="card">
-  <div class="card-header">
-    <div class="speed-lines"></div>
-    <h1>THE WITHER REPORT!</h1>
-  </div>
-  <div class="card-body">
-    <div id="content">
-      <div class="fallback">LOADING...</div>
-    </div>
-  </div>
-</div>
-
-<script>
-const STATES = [
-  { label: 'Stormy',        emoji: '⛈️',  color: '#6060a0' },
-  { label: 'Heavy Rain',    emoji: '🌧️', color: '#5a80a0' },
-  { label: 'Rainy',         emoji: '🌦️', color: '#6090b0' },
-  { label: 'Overcast',      emoji: '🌥️', color: '#8899b0' },
-  { label: 'Cloudy',        emoji: '☁️',  color: '#99aabb' },
-  { label: 'Partly Cloudy', emoji: '🌤️', color: '#70b0d0' },
-  { label: 'Clearing Up',   emoji: '🌈',  color: '#80c080' },
-  { label: 'Sunny',         emoji: '☀️',  color: '#f0c040' },
-  { label: 'Beautiful',     emoji: '🌟',  color: '#f0a030' },
-  { label: 'Perfect',       emoji: '✨',  color: '#ff80c0' },
-];
-
-const BAR_COLORS = [
-  '#6060a0','#5a80a0','#6090b0','#8899b0','#99aabb',
-  '#70b0d0','#80c080','#f0c040','#f0a030','#ff80c0'
-];
-
-fetch('mood.json?v=' + Date.now())
-  .then(r => r.json())
-  .then(data => {
-    const level = Math.max(1, Math.min(10, data.level || 6));
-    const s = STATES[level - 1];
-
-    let barsHTML = '';
-    for (let i = 1; i <= 10; i++) {
-      let cls = 'bar';
-      let style = '';
-      if (i <= level) { cls += ' filled'; style = `--bc: ${BAR_COLORS[i-1]};`; }
-      if (i === level) cls += ' current';
-      barsHTML += `<div class="${cls}" style="${style}"></div>`;
+    body {
+      font-family: 'Orbitron', 'Impact', 'Comic Sans MS', monospace;
+      min-height: 100vh;
+      background-color: #ccff00;
+      background-image:
+        radial-gradient(circle, #00dd00 1px, transparent 1px),
+        radial-gradient(circle, #ffff00 1px, transparent 1px);
+      background-size: 30px 30px, 60px 60px;
+      background-position: 0 0, 15px 15px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 12px 30px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    const noteHTML = data.note
-      ? `<div class="note-label">NOTE:</div><div class="note-text">${data.note}</div>`
-      : `<div class="note-text" style="color:#bbb;">— no note —</div>`;
+    /* Scrolling marquee banner */
+    .marquee-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: linear-gradient(90deg, #ff0080, #ff6600, #ffff00, #00ff00, #0080ff, #8000ff, #ff0080);
+      background-size: 400% 100%;
+      animation: rainbowBg 3s linear infinite;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
 
-    document.getElementById('content').innerHTML = `
-      <div class="speech-bubble">AZMYTH IS FEELING:</div>
-      <div class="emoji-panel">
-        <span class="main-emoji">${s.emoji}</span>
+    @keyframes rainbowBg {
+      from { background-position: 0% 50%; }
+      to   { background-position: 400% 50%; }
+    }
+
+    .marquee-inner {
+      display: flex;
+      white-space: nowrap;
+      animation: marqueeScroll 14s linear infinite;
+    }
+
+    @keyframes marqueeScroll {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(-100%); }
+    }
+
+    .marquee-text {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #000;
+      letter-spacing: 0.2em;
+      padding-right: 4rem;
+    }
+
+    /* Main card wrapper */
+    .card-outer {
+      margin-top: 48px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Rainbow gradient border trick */
+    .card-border {
+      padding: 5px;
+      border-radius: 8px;
+      background: repeating-linear-gradient(
+        45deg,
+        #ff0080 0px, #ff0080 10px,
+        #ff6600 10px, #ff6600 20px,
+        #ffff00 20px, #ffff00 30px,
+        #00ff00 30px, #00ff00 40px,
+        #0080ff 40px, #0080ff 50px,
+        #8000ff 50px, #8000ff 60px
+      );
+      animation: borderShift 1.5s linear infinite;
+      box-shadow:
+        0 0 20px #ff0080,
+        0 0 40px #ff6600,
+        inset 0 0 20px rgba(0,255,0,0.1);
+    }
+
+    @keyframes borderShift {
+      from { background-position: 0 0; }
+      to   { background-position: 60px 60px; }
+    }
+
+    /* Inner card */
+    .card {
+      background: #000011;
+      border-radius: 4px;
+      padding: 1.8rem 1.6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Scanline effect */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        transparent,
+        transparent 2px,
+        rgba(0,255,0,0.025) 2px,
+        rgba(0,255,0,0.025) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card > * { position: relative; z-index: 2; }
+
+    /* Title block */
+    .site-title {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-bottom: 0.3rem;
+      text-shadow: 3px 3px 0px #ff0080, -2px -2px 0px #0080ff;
+      animation: titleGlow 2s ease-in-out infinite alternate;
+    }
+
+    .site-title span:nth-child(1) { color: #ff0080; }
+    .site-title span:nth-child(2) { color: #ffff00; }
+    .site-title span:nth-child(3) { color: #00ff00; }
+    .site-title span:nth-child(4) { color: #0080ff; }
+    .site-title span:nth-child(5) { color: #ff6600; }
+    .site-title span:nth-child(6) { color: #ff0080; }
+    .site-title span:nth-child(7) { color: #ffff00; }
+
+    @keyframes titleGlow {
+      from { text-shadow: 2px 2px 0 #ff0080, -1px -1px 0 #0080ff; filter: brightness(1); }
+      to   { text-shadow: 4px 4px 0 #ff0080, -2px -2px 0 #0080ff, 0 0 20px #ffff00; filter: brightness(1.2); }
+    }
+
+    .divider-stars {
+      font-size: 0.7rem;
+      color: #00ff00;
+      letter-spacing: 6px;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* Vibe label */
+    .vibe-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: #ffff00;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 8px #ffff00;
+    }
+
+    /* Emoji box */
+    .emoji-box {
+      display: inline-block;
+      font-size: 6rem;
+      margin-bottom: 0.8rem;
+      padding: 0.3rem 0.8rem;
+      background: rgba(0,255,0,0.07);
+      border: 3px solid #00ff00;
+      box-shadow:
+        0 0 10px #00ff00,
+        0 0 30px rgba(0,255,0,0.3),
+        inset 0 0 15px rgba(0,255,0,0.1);
+      animation: emojiGlow 1.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes emojiGlow {
+      from { box-shadow: 0 0 8px #00ff00, 0 0 20px rgba(0,255,0,0.2), inset 0 0 10px rgba(0,255,0,0.05); border-color: #00ff00; }
+      to   { box-shadow: 0 0 20px #00ff00, 0 0 50px rgba(0,255,0,0.5), inset 0 0 25px rgba(0,255,0,0.15); border-color: #ccff00; }
+    }
+
+    /* Condition name */
+    .condition-name {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    .sub-label {
+      font-size: 0.7rem;
+      color: #ff6600;
+      letter-spacing: 0.12em;
+      margin-bottom: 1.4rem;
+      text-shadow: 0 0 6px #ff6600;
+    }
+
+    /* Color blocks scale */
+    .scale-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 1.4rem;
+    }
+
+    .block {
+      width: 26px;
+      height: 26px;
+      border: 2px solid rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .block.lit {
+      border-color: rgba(255,255,255,0.6);
+      transform: scaleY(1.3);
+    }
+
+    /* Block colors per position */
+    .block:nth-child(1).lit  { background: #8800ff; box-shadow: 0 0 8px #8800ff; }
+    .block:nth-child(2).lit  { background: #0000ff; box-shadow: 0 0 8px #0000ff; }
+    .block:nth-child(3).lit  { background: #0080ff; box-shadow: 0 0 8px #0080ff; }
+    .block:nth-child(4).lit  { background: #00ccff; box-shadow: 0 0 8px #00ccff; }
+    .block:nth-child(5).lit  { background: #00ff80; box-shadow: 0 0 8px #00ff80; }
+    .block:nth-child(6).lit  { background: #00ff00; box-shadow: 0 0 8px #00ff00; }
+    .block:nth-child(7).lit  { background: #ccff00; box-shadow: 0 0 8px #ccff00; }
+    .block:nth-child(8).lit  { background: #ffff00; box-shadow: 0 0 8px #ffff00; }
+    .block:nth-child(9).lit  { background: #ff8800; box-shadow: 0 0 8px #ff8800; }
+    .block:nth-child(10).lit { background: #ff0080; box-shadow: 0 0 8px #ff0080; }
+
+    .block:not(.lit) { background: rgba(255,255,255,0.06); }
+
+    /* Divider */
+    .divider-line {
+      color: #ff0080;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      margin: 1rem 0;
+      text-shadow: 0 0 6px #ff0080;
+    }
+
+    /* Note */
+    .note-box {
+      border: 1px dashed #ff6600;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1.2rem;
+      border-radius: 3px;
+      min-height: 2.4rem;
+      background: rgba(255, 102, 0, 0.06);
+    }
+
+    .note-text {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: #ffcc00;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Footer visitor counter style */
+    .footer-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .visitor-label {
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.1em;
+    }
+
+    .visitor-counter {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #00ff00;
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 8px #00ff00;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .updated-row {
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    /* Animated "best viewed" badge */
+    .best-viewed {
+      font-size: 0.55rem;
+      color: #ff0080;
+      letter-spacing: 0.1em;
+      margin-top: 6px;
+      text-shadow: 0 0 4px #ff0080;
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Marquee banner -->
+  <div class="marquee-banner">
+    <div class="marquee-inner">
+      <span class="marquee-text">★ WELCOME TO AZMYTH'S WITHER REPORT ★ UPDATED DAILY ★ MOOD TRACKER V3.0 ★ BEST VIEWED IN 1024x768 ★ NO HOTLINKING ★ SIGN MY GUESTBOOK ★ </span>
+      <span class="marquee-text">★ WELCOME TO AZMYTH'S WITHER REPORT ★ UPDATED DAILY ★ MOOD TRACKER V3.0 ★ BEST VIEWED IN 1024x768 ★ NO HOTLINKING ★ SIGN MY GUESTBOOK ★ </span>
+    </div>
+  </div>
+
+  <div class="card-outer">
+    <div class="card-border">
+      <div class="card">
+
+        <div class="site-title">
+          <span>W</span><span>I</span><span>T</span><span>H</span><span>E</span><span>R</span><span> REPORT</span>
+        </div>
+        <span class="divider-stars">✦✦✦✦✦✦✦✦✦✦✦✦</span>
+
+        <div class="vibe-label">⚡ AZMYTH'S CURRENT VIBE: ⚡</div>
+
+        <div class="emoji-box" id="mainEmoji">⛈️</div>
+
+        <div class="condition-name" id="conditionName">LOADING</div>
+        <div class="sub-label" id="subLabel">STANDBY...</div>
+
+        <div class="scale-row" id="scaleRow"></div>
+
+        <div class="divider-line">✦✦✦ ~ ~ ~ ✦✦✦ ~ ~ ~ ✦✦✦</div>
+
+        <div class="note-box">
+          <div class="note-text" id="noteText">no notes today...</div>
+        </div>
+
+        <div class="divider-line">✦✦✦ ~ ~ ~ ✦✦✦ ~ ~ ~ ✦✦✦</div>
+
+        <div class="footer-block">
+          <div class="visitor-label">VISITORS TODAY</div>
+          <div class="visitor-counter" id="visitorCount">000000</div>
+          <div class="updated-row" id="updatedRow">last updated: loading...</div>
+          <div class="best-viewed">★ BEST VIEWED IN NETSCAPE NAVIGATOR ★</div>
+        </div>
+
       </div>
-      <div class="pow-panel">
-        <div class="condition-text" style="color:${s.color}; border-color:#111;">${s.label.toUpperCase()}!</div>
-      </div>
-      <div class="level-row"><span class="bang">LEVEL</span> ${level} / 10</div>
-      <div class="scale-section">
-        <div class="scale-bars">${barsHTML}</div>
-      </div>
-      <div class="divider-comic"></div>
-      <div class="note-box">${noteHTML}</div>
-      <div class="updated-box">LAST UPDATE: ${(data.updated || '?').toUpperCase()}</div>
-    `;
-  })
-  .catch(() => {
-    document.getElementById('content').innerHTML =
-      '<div class="fallback">KA-BOOM!<br>COULDN\'T LOAD!</div>';
-  });
-</script>
+    </div>
+  </div>
+
+  <script>
+    const STATES = [
+      { label: 'STORMY',        emoji: '⛈️',  sub: 'SEVERE WEATHER ALERT',  color: '#cc44ff', level: 1  },
+      { label: 'HEAVY RAIN',    emoji: '🌧️',  sub: 'PRECIPITATION: MAXIMUM', color: '#6688ff', level: 2  },
+      { label: 'RAINY',         emoji: '🌦️',  sub: 'MOISTURE DETECTED',     color: '#44aaff', level: 3  },
+      { label: 'OVERCAST',      emoji: '🌥️',  sub: 'GREY SKIES PROTOCOL',   color: '#88bbff', level: 4  },
+      { label: 'CLOUDY',        emoji: '☁️',   sub: 'CLOUD COVERAGE: HIGH',  color: '#aaccff', level: 5  },
+      { label: 'PARTLY CLOUDY', emoji: '🌤️',  sub: 'PARTIAL VISIBILITY',    color: '#ccdd44', level: 6  },
+      { label: 'CLEARING UP',   emoji: '🌈',   sub: 'RAINBOW PROTOCOL INIT', color: '#ff9900', level: 7  },
+      { label: 'SUNNY',         emoji: '☀️',   sub: 'SOLAR OUTPUT: MAX',     color: '#ffcc00', level: 8  },
+      { label: 'BEAUTIFUL',     emoji: '🌟',   sub: 'VIBES: EXCELLENT',      color: '#ff6600', level: 9  },
+      { label: 'PERFECT',       emoji: '✨',   sub: '*** ULTRA MODE ***',     color: '#ff0080', level: 10 },
+    ];
+
+    // Build scale blocks
+    const scaleRow = document.getElementById('scaleRow');
+    for (let i = 0; i < 10; i++) {
+      const b = document.createElement('div');
+      b.className = 'block';
+      b.id = 'block-' + i;
+      scaleRow.appendChild(b);
+    }
+
+    // Fake visitor counter
+    const base = 1337 + Math.floor(Math.random() * 8888);
+    document.getElementById('visitorCount').textContent = String(base).padStart(6, '0');
+
+    function formatDate(str) {
+      if (!str) return '';
+      const d = new Date(str);
+      if (isNaN(d)) return str;
+      return d.toLocaleString('en-US', {
+        month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+
+    fetch('mood.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const level = Math.max(1, Math.min(10, data.level || 6));
+        const s = STATES[level - 1];
+
+        document.getElementById('mainEmoji').textContent    = s.emoji;
+        document.getElementById('conditionName').textContent = s.label;
+        document.getElementById('conditionName').style.color = s.color;
+        document.getElementById('conditionName').style.textShadow = `0 0 12px ${s.color}`;
+        document.getElementById('subLabel').textContent     = s.sub;
+
+        for (let i = 0; i < 10; i++) {
+          const b = document.getElementById('block-' + i);
+          b.className = 'block' + (i < level ? ' lit' : '');
+        }
+
+        const noteEl = document.getElementById('noteText');
+        noteEl.textContent = data.note
+          ? '> ' + data.note
+          : 'no notes today...';
+
+        const upd = document.getElementById('updatedRow');
+        upd.textContent = data.updated
+          ? 'last updated: ' + formatDate(data.updated)
+          : 'last updated: unknown';
+      })
+      .catch(() => {
+        document.getElementById('conditionName').textContent = '???';
+        document.getElementById('subLabel').textContent      = 'ERROR: CANNOT CONNECT';
+        document.getElementById('updatedRow').textContent    = 'connection failed';
+      });
+  </script>
 </body>
 </html>

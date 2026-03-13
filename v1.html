@@ -1,271 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Wither Report</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Wither Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: #fdf6e3;
-    font-family: 'Caveat', cursive;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-image:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 27px,
-        #e8dfc8 27px,
-        #e8dfc8 28px
-      );
-  }
+    html, body { width: 100%; height: 100%; }
 
-  .card {
-    background: #fffdf5;
-    width: 100%;
-    max-width: 460px;
-    padding: 30px 28px 28px;
-    border: 4px solid #333;
-    border-radius: 18px 12px 20px 14px;
-    box-shadow: 6px 7px 0px #c9a05a, 8px 9px 0px #a07040;
-    position: relative;
-  }
-
-  .tape {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-2deg);
-    background: rgba(255, 240, 100, 0.7);
-    width: 80px;
-    height: 24px;
-    border-radius: 2px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-  }
-
-  .banner {
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 10px 16px;
-    background: #ff4444;
-    border: 3px solid #333;
-    border-radius: 10px 14px 8px 12px;
-    box-shadow: 3px 4px 0 #990000;
-    transform: rotate(-1deg);
-    display: inline-block;
-    width: 100%;
-  }
-
-  .banner h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 0 #990000;
-  }
-
-  .feeling-label {
-    font-size: 1.4rem;
-    color: #555;
-    text-align: center;
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-
-  .emoji-wrap {
-    text-align: center;
-    margin: 10px 0;
-  }
-
-  .main-emoji {
-    font-size: 8rem;
-    display: inline-block;
-    animation: bounce 1.8s ease-in-out infinite;
-    filter: drop-shadow(3px 4px 0px rgba(0,0,0,0.15));
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0px) rotate(-2deg); }
-    50% { transform: translateY(-14px) rotate(2deg); }
-  }
-
-  .condition-text {
-    text-align: center;
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 18px;
-    text-shadow: 2px 2px 0 #aaa;
-  }
-
-  .scale-label {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 8px;
-    text-align: center;
-  }
-
-  .pips {
-    display: flex;
-    justify-content: center;
-    gap: 7px;
-    margin-bottom: 20px;
-  }
-
-  .pip {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 3px solid #333;
-    background: #e0d8c8;
-    box-shadow: 2px 2px 0 #999;
-    transition: transform 0.2s;
-    position: relative;
-  }
-
-  .pip.filled {
-    box-shadow: 2px 2px 0 #555;
-  }
-
-  .pip:nth-child(1).filled  { background: #6060a0; }
-  .pip:nth-child(2).filled  { background: #5a80a0; }
-  .pip:nth-child(3).filled  { background: #6090b0; }
-  .pip:nth-child(4).filled  { background: #8899b0; }
-  .pip:nth-child(5).filled  { background: #99aabb; }
-  .pip:nth-child(6).filled  { background: #70b0d0; }
-  .pip:nth-child(7).filled  { background: #80c080; }
-  .pip:nth-child(8).filled  { background: #f0c040; }
-  .pip:nth-child(9).filled  { background: #f0a030; }
-  .pip:nth-child(10).filled { background: #ff80c0; }
-
-  .pip.current {
-    transform: scale(1.25) rotate(5deg);
-    border-color: #ff4444;
-    border-width: 3px;
-  }
-
-  .divider {
-    border: none;
-    border-top: 3px dashed #c9b89a;
-    margin: 14px 0;
-  }
-
-  .note-section {
-    background: #fff9e0;
-    border: 3px solid #e0c060;
-    border-radius: 8px 12px 10px 6px;
-    padding: 10px 14px;
-    margin-bottom: 14px;
-    min-height: 48px;
-    box-shadow: 2px 2px 0 #c9a040;
-  }
-
-  .note-label {
-    font-size: 1rem;
-    color: #999;
-    font-weight: 600;
-  }
-
-  .note-text {
-    font-size: 1.3rem;
-    color: #555;
-    font-style: italic;
-  }
-
-  .updated {
-    text-align: right;
-    font-size: 1.1rem;
-    color: #aaa;
-  }
-
-  .corner-doodle {
-    position: absolute;
-    font-size: 1.4rem;
-    opacity: 0.6;
-  }
-  .corner-doodle.tl { top: 6px; left: 8px; transform: rotate(-15deg); }
-  .corner-doodle.tr { top: 6px; right: 8px; transform: rotate(10deg); }
-  .corner-doodle.bl { bottom: 6px; left: 8px; transform: rotate(20deg); }
-  .corner-doodle.br { bottom: 6px; right: 8px; transform: rotate(-10deg); }
-
-  .fallback {
-    text-align: center;
-    color: #999;
-    font-size: 1.3rem;
-    padding: 20px;
-  }
-</style>
-</head>
-<body>
-<div class="card" id="card">
-  <div class="tape"></div>
-  <span class="corner-doodle tl">⭐</span>
-  <span class="corner-doodle tr">🌸</span>
-  <span class="corner-doodle bl">🌻</span>
-  <span class="corner-doodle br">💛</span>
-
-  <div class="banner">
-    <h1>THE WITHER REPORT</h1>
-  </div>
-
-  <div id="content">
-    <div class="fallback">loading...</div>
-  </div>
-</div>
-
-<script>
-const STATES = [
-  { label: 'Stormy',        emoji: '⛈️',  color: '#6060a0' },
-  { label: 'Heavy Rain',    emoji: '🌧️', color: '#5a80a0' },
-  { label: 'Rainy',         emoji: '🌦️', color: '#6090b0' },
-  { label: 'Overcast',      emoji: '🌥️', color: '#8899b0' },
-  { label: 'Cloudy',        emoji: '☁️',  color: '#99aabb' },
-  { label: 'Partly Cloudy', emoji: '🌤️', color: '#70b0d0' },
-  { label: 'Clearing Up',   emoji: '🌈',  color: '#80c080' },
-  { label: 'Sunny',         emoji: '☀️',  color: '#f0c040' },
-  { label: 'Beautiful',     emoji: '🌟',  color: '#f0a030' },
-  { label: 'Perfect',       emoji: '✨',  color: '#ff80c0' },
-];
-
-fetch('mood.json?v=' + Date.now())
-  .then(r => r.json())
-  .then(data => {
-    const level = Math.max(1, Math.min(10, data.level || 6));
-    const s = STATES[level - 1];
-
-    let pipsHTML = '';
-    for (let i = 1; i <= 10; i++) {
-      let cls = 'pip';
-      if (i <= level) cls += ' filled';
-      if (i === level) cls += ' current';
-      pipsHTML += `<div class="${cls}"></div>`;
+    body {
+      font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(175deg, #2c2c54 0%, #474787 100%);
+      transition: background 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      position: relative;
     }
 
-    const noteHTML = data.note
-      ? `<div class="note-label">📝 note:</div><div class="note-text">"${data.note}"</div>`
-      : `<div class="note-text" style="color:#ccc;">no note today</div>`;
+    /* Moving cloud shimmer layer */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 55% at 15% 85%, rgba(255,255,255,0.05) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 45% at 85% 15%, rgba(255,255,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 70%);
+      pointer-events: none;
+      animation: shimmer 12s ease-in-out infinite alternate;
+    }
 
-    document.getElementById('content').innerHTML = `
-      <div class="feeling-label">azmyth is feeling:</div>
-      <div class="emoji-wrap"><span class="main-emoji">${s.emoji}</span></div>
-      <div class="condition-text" style="color:${s.color}">${s.label}</div>
-      <div class="scale-label">level ${level} out of 10</div>
-      <div class="pips">${pipsHTML}</div>
-      <hr class="divider">
-      <div class="note-section">${noteHTML}</div>
-      <div class="updated">last updated: ${data.updated || '?'}</div>
-    `;
-  })
-  .catch(() => {
-    document.getElementById('content').innerHTML =
-      '<div class="fallback">☁️ couldn\'t load the report right now!</div>';
-  });
-</script>
+    @keyframes shimmer {
+      from { opacity: 0.6; transform: scale(1); }
+      to   { opacity: 1;   transform: scale(1.04); }
+    }
+
+    /* Floating particle dots */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+      background-size: 55px 55px;
+      animation: drift 22s linear infinite;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    @keyframes drift {
+      from { transform: translateY(0px); }
+      to   { transform: translateY(-55px); }
+    }
+
+    /* ─── Main card ─── */
+    .container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2.5rem 2rem;
+      max-width: 430px;
+      width: 100%;
+    }
+
+    /* Top label */
+    .app-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 3rem;
+    }
+
+    .app-label-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.65);
+    }
+
+    .app-label-text {
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* Big emoji */
+    .emoji-wrap {
+      display: block;
+      font-size: 9.5rem;
+      line-height: 1;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 12px 36px rgba(0,0,0,0.28));
+      animation: float 5.5s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50%       { transform: translateY(-16px) rotate(1deg); }
+    }
+
+    /* "azmyth is feeling" */
+    .feeling-label {
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Condition name */
+    .condition-name {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 2.6rem;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+
+    /* 10-dot scale */
+    .scale-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 2.4rem;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.8);
+      transition: all 0.4s ease;
+      cursor: default;
+    }
+
+    .dot.filled {
+      background: rgba(255,255,255,0.88);
+      border-color: rgba(255,255,255,0.88);
+      box-shadow: 0 0 8px rgba(255,255,255,0.45);
+      transform: scale(1.2);
+    }
+
+    .dot.active {
+      background: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 0 14px rgba(255,255,255,0.9);
+      transform: scale(1.35);
+    }
+
+    /* Note */
+    .note-text {
+      font-size: 0.88rem;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+      margin-bottom: 3rem;
+      min-height: 1.4rem;
+      letter-spacing: 0.01em;
+    }
+
+    /* Updated */
+    .updated-row {
+      font-size: 0.62rem;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ─── Gradient themes ─── */
+    body.theme-stormy   { background: linear-gradient(175deg, #2c2c54 0%, #474787 100%); }
+    body.theme-rain     { background: linear-gradient(175deg, #2d3561 0%, #537895 100%); }
+    body.theme-cloudy   { background: linear-gradient(175deg, #4a5568 0%, #718096 100%); }
+    body.theme-clearing { background: linear-gradient(175deg, #0f4c75 0%, #1b6ca8 100%); }
+    body.theme-sunny    { background: linear-gradient(175deg, #f46b45 0%, #eea849 100%); }
+    body.theme-perfect  { background: linear-gradient(175deg, #ee0979 0%, #ff6a00 100%); }
+  </style>
+</head>
+<body class="theme-stormy">
+
+  <div class="container">
+    <div class="app-label">
+      <div class="app-label-dot"></div>
+      <span class="app-label-text">The Wither Report</span>
+    </div>
+
+    <span class="emoji-wrap" id="mainEmoji">⛈️</span>
+
+    <div class="feeling-label">azmyth is feeling</div>
+    <div class="condition-name" id="conditionName">Stormy</div>
+
+    <div class="scale-row" id="scaleRow"></div>
+
+    <div class="note-text" id="noteText"></div>
+
+    <div class="updated-row" id="updatedRow">loading…</div>
+  </div>
+
+  <script>
+    const STATES = [
+      { label: 'Stormy',        emoji: '⛈️',  theme: 'stormy'   },
+      { label: 'Heavy Rain',    emoji: '🌧️',  theme: 'stormy'   },
+      { label: 'Rainy',         emoji: '🌦️',  theme: 'rain'     },
+      { label: 'Overcast',      emoji: '🌥️',  theme: 'rain'     },
+      { label: 'Cloudy',        emoji: '☁️',   theme: 'cloudy'   },
+      { label: 'Partly Cloudy', emoji: '🌤️',  theme: 'cloudy'   },
+      { label: 'Clearing Up',   emoji: '🌈',   theme: 'clearing' },
+      { label: 'Sunny',         emoji: '☀️',   theme: 'sunny'    },
+      { label: 'Beautiful',     emoji: '🌟',   theme: 'sunny'    },
+      { label: 'Perfect',       emoji: '✨',   theme: 'perfect'  },
+    ];
+
+    // Build scale dots
+    const scaleRow = document.getElementById('scaleRow');
+    for (let i = 0; i < 10; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      d.id = 'dot-' + i;
+      scaleRow.appendChild(d);
+    }
+
+    function formatDate(str) {
+      if (!str) return '';
+      const d = new Date(str);
+      if (isNaN(d)) return str;
+      return d.toLocaleString('en-US', {
+        month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+
+    fetch('mood.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        const level = Math.max(1, Math.min(10, data.level || 6));
+        const s = STATES[level - 1];
+
+        document.getElementById('mainEmoji').textContent     = s.emoji;
+        document.getElementById('conditionName').textContent = s.label;
+
+        for (let i = 0; i < 10; i++) {
+          const d = document.getElementById('dot-' + i);
+          if (i === level - 1) {
+            d.className = 'dot active';
+          } else if (i < level) {
+            d.className = 'dot filled';
+          } else {
+            d.className = 'dot';
+          }
+        }
+
+        const noteEl = document.getElementById('noteText');
+        noteEl.textContent = data.note ? '\u201c' + data.note + '\u201d' : '';
+
+        const upd = document.getElementById('updatedRow');
+        upd.textContent = data.updated
+          ? 'Updated ' + formatDate(data.updated)
+          : '';
+
+        // Apply gradient theme after a short tick so transition fires
+        requestAnimationFrame(() => {
+          document.body.className = 'theme-' + s.theme;
+        });
+      })
+      .catch(() => {
+        document.getElementById('updatedRow').textContent = 'Could not load mood data';
+      });
+  </script>
 </body>
 </html>
