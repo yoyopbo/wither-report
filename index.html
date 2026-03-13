@@ -337,22 +337,37 @@
       },
     ];
 
+    // 10 named states (level 1–10)
+    const STATES = [
+      { label: 'Stormy',       color: '#a0a8c0', ticker: '⚠ STORM WARNING IN EFFECT · ROUGH AHEAD · SEEK SHELTER · ',      gi: 0 },
+      { label: 'Heavy Rain',   color: '#7a9ab8', ticker: 'HEAVY RAIN ADVISORY · FLOODING POSSIBLE · STAY INDOORS · ',       gi: 0 },
+      { label: 'Rainy',        color: '#7a9ab8', ticker: 'RAIN ADVISORY · BRING AN UMBRELLA · GREY SKIES EXPECTED · ',      gi: 1 },
+      { label: 'Overcast',     color: '#8899b0', ticker: 'OVERCAST CONDITIONS · CLOUDS PERSISTING THROUGHOUT · ',           gi: 1 },
+      { label: 'Cloudy',       color: '#8899b0', ticker: 'CLOUDY SKIES · TEMPS MILD · SOME BREAKS POSSIBLE · ',             gi: 2 },
+      { label: 'Partly Cloudy',color: '#c8d8e8', ticker: 'PARTIAL SUNSHINE · MIXED CONDITIONS · PLEASANT TEMPS · ',         gi: 3 },
+      { label: 'Clearing Up',  color: '#c8e8c8', ticker: 'SKIES CLEARING · IMPROVING CONDITIONS · SUN EMERGING · ',        gi: 3 },
+      { label: 'Sunny',        color: '#f0c840', ticker: 'SUNNY CONDITIONS · HIGH PRESSURE HOLDING · GREAT DAY AHEAD · ',  gi: 4 },
+      { label: 'Beautiful',    color: '#f9d840', ticker: 'BEAUTIFUL DAY · PEAK CONDITIONS · ENJOY IT WHILE IT LASTS · ',   gi: 5 },
+      { label: 'Perfect',      color: '#ffe060', ticker: 'PERFECT CONDITIONS · CLEAR SKIES · MAXIMUM SUNSHINE · ✨ · ',    gi: 5 },
+    ];
+
     fetch('mood.json?v=' + Date.now())
       .then(r => r.json())
       .then(render)
-      .catch(() => render({ level: 4, note: '', updated: '' }));
+      .catch(() => render({ level: 6, note: '', updated: '' }));
 
     function render(data) {
-      const level = Math.max(1, Math.min(6, data.level || 4));
-      const w = LEVELS[level - 1];
+      const level = Math.max(1, Math.min(10, data.level || 6));
+      const s = STATES[level - 1];
+      const graphic = LEVELS[s.gi];
 
-      document.getElementById('graphic').innerHTML = w.svg;
-      document.getElementById('condition').textContent = w.label;
-      document.getElementById('condition').style.color = w.color;
-      document.getElementById('ticker').textContent = (w.ticker + w.ticker);
+      document.getElementById('graphic').innerHTML = graphic.svg;
+      document.getElementById('condition').textContent = s.label;
+      document.getElementById('condition').style.color = s.color;
+      document.getElementById('ticker').textContent = (s.ticker + s.ticker);
 
       const scale = document.getElementById('scale');
-      scale.innerHTML = LEVELS.map((_, i) =>
+      scale.innerHTML = STATES.map((_, i) =>
         `<div class="pip${i < level ? ' on' : ''}"></div>`
       ).join('');
 
