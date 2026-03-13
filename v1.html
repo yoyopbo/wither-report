@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wither Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #fdf6e3;
+    font-family: 'Caveat', cursive;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        #e8dfc8 27px,
+        #e8dfc8 28px
+      );
+  }
+
+  .card {
+    background: #fffdf5;
+    width: 100%;
+    max-width: 460px;
+    padding: 30px 28px 28px;
+    border: 4px solid #333;
+    border-radius: 18px 12px 20px 14px;
+    box-shadow: 6px 7px 0px #c9a05a, 8px 9px 0px #a07040;
+    position: relative;
+  }
+
+  .tape {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    background: rgba(255, 240, 100, 0.7);
+    width: 80px;
+    height: 24px;
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .banner {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background: #ff4444;
+    border: 3px solid #333;
+    border-radius: 10px 14px 8px 12px;
+    box-shadow: 3px 4px 0 #990000;
+    transform: rotate(-1deg);
+    display: inline-block;
+    width: 100%;
+  }
+
+  .banner h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 #990000;
+  }
+
+  .feeling-label {
+    font-size: 1.4rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .emoji-wrap {
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .main-emoji {
+    font-size: 8rem;
+    display: inline-block;
+    animation: bounce 1.8s ease-in-out infinite;
+    filter: drop-shadow(3px 4px 0px rgba(0,0,0,0.15));
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    50% { transform: translateY(-14px) rotate(2deg); }
+  }
+
+  .condition-text {
+    text-align: center;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 18px;
+    text-shadow: 2px 2px 0 #aaa;
+  }
+
+  .scale-label {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .pips {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 20px;
+  }
+
+  .pip {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 3px solid #333;
+    background: #e0d8c8;
+    box-shadow: 2px 2px 0 #999;
+    transition: transform 0.2s;
+    position: relative;
+  }
+
+  .pip.filled {
+    box-shadow: 2px 2px 0 #555;
+  }
+
+  .pip:nth-child(1).filled  { background: #6060a0; }
+  .pip:nth-child(2).filled  { background: #5a80a0; }
+  .pip:nth-child(3).filled  { background: #6090b0; }
+  .pip:nth-child(4).filled  { background: #8899b0; }
+  .pip:nth-child(5).filled  { background: #99aabb; }
+  .pip:nth-child(6).filled  { background: #70b0d0; }
+  .pip:nth-child(7).filled  { background: #80c080; }
+  .pip:nth-child(8).filled  { background: #f0c040; }
+  .pip:nth-child(9).filled  { background: #f0a030; }
+  .pip:nth-child(10).filled { background: #ff80c0; }
+
+  .pip.current {
+    transform: scale(1.25) rotate(5deg);
+    border-color: #ff4444;
+    border-width: 3px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 3px dashed #c9b89a;
+    margin: 14px 0;
+  }
+
+  .note-section {
+    background: #fff9e0;
+    border: 3px solid #e0c060;
+    border-radius: 8px 12px 10px 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    min-height: 48px;
+    box-shadow: 2px 2px 0 #c9a040;
+  }
+
+  .note-label {
+    font-size: 1rem;
+    color: #999;
+    font-weight: 600;
+  }
+
+  .note-text {
+    font-size: 1.3rem;
+    color: #555;
+    font-style: italic;
+  }
+
+  .updated {
+    text-align: right;
+    font-size: 1.1rem;
+    color: #aaa;
+  }
+
+  .corner-doodle {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0.6;
+  }
+  .corner-doodle.tl { top: 6px; left: 8px; transform: rotate(-15deg); }
+  .corner-doodle.tr { top: 6px; right: 8px; transform: rotate(10deg); }
+  .corner-doodle.bl { bottom: 6px; left: 8px; transform: rotate(20deg); }
+  .corner-doodle.br { bottom: 6px; right: 8px; transform: rotate(-10deg); }
+
+  .fallback {
+    text-align: center;
+    color: #999;
+    font-size: 1.3rem;
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="tape"></div>
+  <span class="corner-doodle tl">⭐</span>
+  <span class="corner-doodle tr">🌸</span>
+  <span class="corner-doodle bl">🌻</span>
+  <span class="corner-doodle br">💛</span>
+
+  <div class="banner">
+    <h1>THE WITHER REPORT</h1>
+  </div>
+
+  <div id="content">
+    <div class="fallback">loading...</div>
+  </div>
+</div>
+
+<script>
+const STATES = [
+  { label: 'Stormy',        emoji: '⛈️',  color: '#6060a0' },
+  { label: 'Heavy Rain',    emoji: '🌧️', color: '#5a80a0' },
+  { label: 'Rainy',         emoji: '🌦️', color: '#6090b0' },
+  { label: 'Overcast',      emoji: '🌥️', color: '#8899b0' },
+  { label: 'Cloudy',        emoji: '☁️',  color: '#99aabb' },
+  { label: 'Partly Cloudy', emoji: '🌤️', color: '#70b0d0' },
+  { label: 'Clearing Up',   emoji: '🌈',  color: '#80c080' },
+  { label: 'Sunny',         emoji: '☀️',  color: '#f0c040' },
+  { label: 'Beautiful',     emoji: '🌟',  color: '#f0a030' },
+  { label: 'Perfect',       emoji: '✨',  color: '#ff80c0' },
+];
+
+fetch('mood.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const level = Math.max(1, Math.min(10, data.level || 6));
+    const s = STATES[level - 1];
+
+    let pipsHTML = '';
+    for (let i = 1; i <= 10; i++) {
+      let cls = 'pip';
+      if (i <= level) cls += ' filled';
+      if (i === level) cls += ' current';
+      pipsHTML += `<div class="${cls}"></div>`;
+    }
+
+    const noteHTML = data.note
+      ? `<div class="note-label">📝 note:</div><div class="note-text">"${data.note}"</div>`
+      : `<div class="note-text" style="color:#ccc;">no note today</div>`;
+
+    document.getElementById('content').innerHTML = `
+      <div class="feeling-label">azmyth is feeling:</div>
+      <div class="emoji-wrap"><span class="main-emoji">${s.emoji}</span></div>
+      <div class="condition-text" style="color:${s.color}">${s.label}</div>
+      <div class="scale-label">level ${level} out of 10</div>
+      <div class="pips">${pipsHTML}</div>
+      <hr class="divider">
+      <div class="note-section">${noteHTML}</div>
+      <div class="updated">last updated: ${data.updated || '?'}</div>
+    `;
+  })
+  .catch(() => {
+    document.getElementById('content').innerHTML =
+      '<div class="fallback">☁️ couldn\'t load the report right now!</div>';
+  });
+</script>
+</body>
+</html>

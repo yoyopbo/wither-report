@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wither Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Pacifico', cursive;
+    min-height: 100vh;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* floating confetti dots */
+  .confetti-dot {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: float-up linear infinite;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  @keyframes float-up {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(-80px) rotate(720deg); opacity: 0; }
+  }
+
+  .card {
+    background: white;
+    width: 100%;
+    max-width: 460px;
+    padding: 28px 22px;
+    border-radius: 24px;
+    border: 5px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    z-index: 1;
+    box-shadow:
+      0 0 0 5px white,
+      0 0 0 9px #ff80c0,
+      0 8px 40px rgba(0,0,0,0.1);
+  }
+
+  /* rainbow outline via pseudo */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 30px;
+    background: linear-gradient(135deg,
+      #ff6b6b, #ffa500, #ffff00, #7fff00,
+      #00cfff, #a855f7, #ff6b6b);
+    z-index: -1;
+  }
+
+  .title-wrap {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .rainbow-title {
+    font-size: 1.9rem;
+    background: linear-gradient(90deg,
+      #ff0000, #ff8800, #ffdd00,
+      #00cc00, #0088ff, #8800ff, #ff0088);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+    line-height: 1.3;
+    filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1));
+  }
+
+  .sparkle-row {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 4px;
+  }
+
+  .feeling-label {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, #ff6b6b, #ffa500, #ffdd00, #00cc00, #0088ff, #cc00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .emoji-stage {
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .emoji-surrounds {
+    font-size: 1.8rem;
+    letter-spacing: 6px;
+    margin-bottom: 4px;
+  }
+
+  .main-emoji {
+    font-size: 7rem;
+    display: inline-block;
+    animation: rainbow-spin 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+  }
+
+  @keyframes rainbow-spin {
+    0%   { transform: rotate(-5deg) scale(1); }
+    25%  { transform: rotate(5deg) scale(1.08); }
+    50%  { transform: rotate(-3deg) scale(1.12); }
+    75%  { transform: rotate(6deg) scale(1.05); }
+    100% { transform: rotate(-5deg) scale(1); }
+  }
+
+  .condition-wrap {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .condition-text {
+    font-size: 2rem;
+    background: linear-gradient(90deg,
+      #ff3366, #ff8800, #ffcc00, #33cc33, #0099ff, #aa00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+  }
+
+  .level-label {
+    text-align: center;
+    font-size: 1rem;
+    color: #ff88bb;
+    margin-bottom: 12px;
+  }
+
+  /* Rainbow gradient bar */
+  .scale-section {
+    margin-bottom: 18px;
+  }
+
+  .rainbow-bar-track {
+    height: 24px;
+    border-radius: 12px;
+    background: linear-gradient(90deg,
+      #6060a0, #5a80a0, #6090b0, #8899b0, #99aabb,
+      #70b0d0, #80c080, #f0c040, #f0a030, #ff80c0);
+    position: relative;
+    overflow: hidden;
+    border: 3px solid transparent;
+    box-shadow: 0 0 0 3px white, 0 0 0 5px #ffaacc;
+  }
+
+  .rainbow-bar-mask {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.88);
+    transition: width 0.6s ease;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .bar-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 3px solid #ff44aa;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 60, 160, 0.6);
+  }
+
+  .bar-numbers {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 2px 0;
+    font-size: 0.55rem;
+    color: #ccc;
+  }
+
+  .divider-rainbow {
+    border: none;
+    height: 4px;
+    background: linear-gradient(90deg,
+      #ff3366, #ff8800, #ffcc00, #33cc33, #0099ff, #aa00ff, #ff3366);
+    border-radius: 2px;
+    margin: 16px 0;
+  }
+
+  .note-card {
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    min-height: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .note-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      #fff0fa, #f0faff, #f0fff0, #fffaf0);
+    z-index: 0;
+    border-radius: 16px;
+  }
+
+  .note-card > * { position: relative; z-index: 1; }
+
+  .note-label {
+    font-size: 0.8rem;
+    background: linear-gradient(90deg, #ff66aa, #aa44ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+  }
+
+  .note-text {
+    font-size: 1rem;
+    color: #886699;
+    line-height: 1.5;
+  }
+
+  .updated-section {
+    text-align: center;
+  }
+
+  .updated-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b6b, #ffa500, #ffdd00, #00cc00, #0088ff, #aa00ff);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .fallback {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #ff88bb;
+    padding: 30px;
+  }
+</style>
+</head>
+<body>
+<!-- confetti dots injected by JS -->
+
+<div class="card">
+  <div class="title-wrap">
+    <div class="rainbow-title">The Wither Report!</div>
+  </div>
+  <div class="sparkle-row">✨ 🌈 ⭐ 🌈 ✨</div>
+  <div id="content">
+    <div class="fallback">✨ loading... ✨</div>
+  </div>
+</div>
+
+<script>
+const STATES = [
+  { label: 'Stormy',        emoji: '⛈️',  color: '#6060a0' },
+  { label: 'Heavy Rain',    emoji: '🌧️', color: '#5a80a0' },
+  { label: 'Rainy',         emoji: '🌦️', color: '#6090b0' },
+  { label: 'Overcast',      emoji: '🌥️', color: '#8899b0' },
+  { label: 'Cloudy',        emoji: '☁️',  color: '#99aabb' },
+  { label: 'Partly Cloudy', emoji: '🌤️', color: '#70b0d0' },
+  { label: 'Clearing Up',   emoji: '🌈',  color: '#80c080' },
+  { label: 'Sunny',         emoji: '☀️',  color: '#f0c040' },
+  { label: 'Beautiful',     emoji: '🌟',  color: '#f0a030' },
+  { label: 'Perfect',       emoji: '✨',  color: '#ff80c0' },
+];
+
+// spawn confetti
+const CONFETTI_COLORS = [
+  '#ff6b6b','#ffa500','#ffdd00','#00cc44',
+  '#00aaff','#aa44ff','#ff44bb','#00ddcc'
+];
+for (let i = 0; i < 22; i++) {
+  const d = document.createElement('div');
+  d.className = 'confetti-dot';
+  d.style.cssText = `
+    left: ${Math.random() * 100}vw;
+    width: ${8 + Math.random() * 10}px;
+    height: ${8 + Math.random() * 10}px;
+    background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+    animation-duration: ${4 + Math.random() * 6}s;
+    animation-delay: ${Math.random() * 6}s;
+  `;
+  document.body.appendChild(d);
+}
+
+fetch('mood.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const level = Math.max(1, Math.min(10, data.level || 6));
+    const s = STATES[level - 1];
+
+    // mask percentage: level 10 = 0% hidden, level 1 = 90% hidden
+    const maskPct = ((10 - level) / 10 * 100).toFixed(1);
+    const markerLeft = (level / 10 * 100).toFixed(1);
+
+    let numsHTML = '';
+    for (let i = 1; i <= 10; i++) numsHTML += `<span>${i}</span>`;
+
+    const noteHTML = data.note
+      ? `<div class="note-label">a lil note ✏️</div><div class="note-text">${data.note}</div>`
+      : `<div class="note-text" style="color:#ddc4ee;">no note today! 🌸</div>`;
+
+    document.getElementById('content').innerHTML = `
+      <div class="feeling-label">azmyth is feeling...</div>
+      <div class="emoji-stage">
+        <div class="emoji-surrounds">✨ 🌟 ✨ 🌈 ✨</div>
+        <div><span class="main-emoji">${s.emoji}</span></div>
+        <div class="emoji-surrounds">⭐ 💫 ✨ 💖 ✨</div>
+      </div>
+      <div class="condition-wrap">
+        <span class="condition-text">${s.label}</span>
+      </div>
+      <div class="level-label">level ${level} out of 10 🌈</div>
+      <div class="scale-section">
+        <div class="rainbow-bar-track">
+          <div class="rainbow-bar-mask" style="width: ${maskPct}%"></div>
+          <div class="bar-marker" style="left: ${markerLeft}%"></div>
+        </div>
+        <div class="bar-numbers">${numsHTML}</div>
+      </div>
+      <div class="divider-rainbow"></div>
+      <div class="note-card">${noteHTML}</div>
+      <div class="updated-section">
+        <div class="updated-badge">✨ last updated: ${data.updated || '?'} ✨</div>
+      </div>
+    `;
+  })
+  .catch(() => {
+    document.getElementById('content').innerHTML =
+      '<div class="fallback">🌈 oops! couldn\'t load 🌈</div>';
+  });
+</script>
+</body>
+</html>
